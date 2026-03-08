@@ -3,6 +3,7 @@ import 'package:flutter_spotify_clone/core/themes/app_pallete.dart';
 import 'package:flutter_spotify_clone/features/auth/repository/auth_remote_respository.dart';
 import 'package:flutter_spotify_clone/features/auth/views/widgets/auth_button.dart';
 import 'package:flutter_spotify_clone/features/auth/views/widgets/custom_field.dart';
+import 'package:fpdart/fpdart.dart' hide State;
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -55,7 +56,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     email: _emailController.text.trim(),
                     password: _passwordController.text,
                   );
-                  print(res);
+                  final val = switch (res) {
+                    Left(value: final l) => l,
+                    Right(value: final r) => r,
+                  };
+                  debugPrint(val.toString());
                 },
                 buttonText: "Login",
               ),

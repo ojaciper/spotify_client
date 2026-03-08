@@ -1,7 +1,8 @@
 import "dart:convert";
 
 import "package:flutter/material.dart" show debugPrint;
-import "package:flutter_spotify_clone/core/themes/failure/failure.dart";
+import "package:flutter_spotify_clone/core/constants/server_const.dart";
+import "package:flutter_spotify_clone/core/failure/failure.dart";
 import "package:flutter_spotify_clone/features/auth/models/user_model.dart";
 import "package:fpdart/fpdart.dart";
 import "package:http/http.dart" as http;
@@ -15,40 +16,43 @@ class AuthRemoteRespository {
     // 192.168.1.174
     try {
       final response = await http.post(
-        Uri.parse("http://192.168.1.174:8000/auth/signup"),
+        Uri.parse("${ServerConstant.baseUrl}auth/signup"),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({"name": name, "email": email, "password": password}),
       );
       final resBody = jsonDecode(response.body) as Map<String, dynamic>;
+      debugPrint(resBody.toString());
       if (response.statusCode != 201) {
         // handle error
         return Left(AppFailure(resBody['detail']));
       }
+      debugPrint(resBody.toString());
 
-      return Right(UserModel(email: email, name: name, id: resBody['id']));
+      return Right(UserModel.fromMap(resBody));
     } catch (e) {
-      throw Left(AppFailure(e.toString()));
+      return Left(AppFailure(e.toString()));
     }
   }
 
-  Future<Either<String, Map<String, dynamic>>> login({
+  Future<Either<AppFailure, UserModel>> login({
     required String email,
     required String password,
   }) async {
     // 192.168.1.174
     try {
       final response = await http.post(
-        Uri.parse("http://192.168.1.174:8000/auth/login"),
+        Uri.parse("${ServerConstant.baseUrl}auth/login"),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({"email": email, "password": password}),
       );
+      final resBody = jsonDecode(response.body) as Map<String, dynamic>;
+      debugPrint(resBody.toString());
       if (response.statusCode != 200) {
-        return Left(response.body);
+        return Left(AppFailure(resBody["detail"]));
       }
-      final res = jsonDecode(response.body) as Map<String, dynamic>;
-      return Right(res);
+      return Right(UserModel.fromMap(resBody['user']));
     } catch (e) {
-      throw Left(e.toString());
+      return Left(AppFailure(e.toString()));
     }
   }
 }
