@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spotify_clone/core/themes/theme.dart';
+import 'package:flutter_spotify_clone/features/auth/views/screens/login_screen.dart';
 import 'package:flutter_spotify_clone/features/auth/views/screens/signup.dart';
 
 void main() {

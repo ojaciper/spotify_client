@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spotify_clone/core/themes/app_pallete.dart';
 
 class AuthButton extends StatelessWidget {
-  const AuthButton({super.key});
+  final String buttonText;
+  final VoidCallback onTap;
+  const AuthButton({required this.onTap, required this.buttonText, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,9 +24,9 @@ class AuthButton extends StatelessWidget {
           shadowColor: Pallete.transparentColor,
         ),
 
-        onPressed: () {},
+        onPressed: onTap,
         child: Text(
-          "Sign Up",
+          buttonText,
           style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
         ),
       ),

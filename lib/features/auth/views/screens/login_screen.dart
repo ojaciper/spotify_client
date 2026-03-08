@@ -3,24 +3,21 @@ import 'package:flutter_spotify_clone/core/themes/app_pallete.dart';
 import 'package:flutter_spotify_clone/features/auth/repository/auth_remote_respository.dart';
 import 'package:flutter_spotify_clone/features/auth/views/widgets/auth_button.dart';
 import 'package:flutter_spotify_clone/features/auth/views/widgets/custom_field.dart';
-import 'package:fpdart/fpdart.dart' hide State;
 
-class SignupScreen extends StatefulWidget {
-  const SignupScreen({super.key});
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
   @override
-  State<SignupScreen> createState() => _SignupScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _SignupScreenState extends State<SignupScreen> {
-  final _nameController = TextEditingController();
+class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
-    _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
@@ -39,11 +36,10 @@ class _SignupScreenState extends State<SignupScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const Text(
-                "Sign Up. ",
+                "Login. ",
                 style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 30),
-              CustomField(hintText: "Name", controller: _nameController),
               const SizedBox(height: 15),
               CustomField(hintText: "Email", controller: _emailController),
               const SizedBox(height: 15),
@@ -55,28 +51,22 @@ class _SignupScreenState extends State<SignupScreen> {
               const SizedBox(height: 20),
               AuthButton(
                 onTap: () async {
-                  final res = await AuthRemoteRespository().signUp(
-                    name: _nameController.text,
-                    email: _emailController.text,
+                  final res = await AuthRemoteRespository().login(
+                    email: _emailController.text.trim(),
                     password: _passwordController.text,
                   );
-
-                  final val = switch (res) {
-                    Left(value: final l) => l,
-                    Right(value: final r) => r.toString(),
-                  };
-                  print(val);
+                  print(res);
                 },
-                buttonText: "Sign Up",
+                buttonText: "Login",
               ),
               const SizedBox(height: 20),
               RichText(
                 text: TextSpan(
-                  text: "Already have account? ",
+                  text: "Don't have account? ",
                   style: Theme.of(context).textTheme.titleMedium,
                   children: [
                     TextSpan(
-                      text: "Sign in",
+                      text: "Sign Up",
                       style: TextStyle(
                         color: Pallete.gradient2,
                         fontWeight: FontWeight.bold,
