@@ -8,6 +8,7 @@ import "package:fpdart/fpdart.dart";
 import "package:http/http.dart" as http;
 
 class AuthRemoteRespository {
+  // regisger user
   Future<Either<AppFailure, UserModel>> signUp({
     required String name,
     required String email,
@@ -20,16 +21,15 @@ class AuthRemoteRespository {
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({"name": name, "email": email, "password": password}),
       );
+      debugPrint(response.statusCode.toString());
       final resBody = jsonDecode(response.body) as Map<String, dynamic>;
-      debugPrint(resBody.toString());
       if (response.statusCode != 201) {
         // handle error
         return Left(AppFailure(resBody['detail']));
       }
-      debugPrint(resBody.toString());
-
-      return Right(UserModel.fromMap(resBody));
+      return Right(UserModel.fromJson(response.body));
     } catch (e) {
+      print("there is exception: ${e.toString()}");
       return Left(AppFailure(e.toString()));
     }
   }
