@@ -34,6 +34,23 @@ class AuthViewmodel extends AsyncNotifier<UserModel?> {
     };
     debugPrint(val.toString());
   }
+
+  Future<void> login({required String email, required String password}) async {
+    state = AsyncValue.loading();
+
+    final res = await _authRemoteRespository.login(
+      email: email,
+      password: password,
+    );
+    final val = switch (res) {
+      Left(value: final l) => state = AsyncValue.error(
+        l.message,
+        StackTrace.current,
+      ),
+      Right(value: final r) => state = AsyncValue.data(r),
+    };
+    debugPrint(val.toString());
+  }
 }
 
 final authViewModelProvider =

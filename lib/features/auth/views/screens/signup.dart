@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spotify_clone/core/themes/app_pallete.dart';
 import 'package:flutter_spotify_clone/core/widget/loader.dart';
 import 'package:flutter_spotify_clone/features/auth/viewmodel/auth_viewmodel.dart';
+import 'package:flutter_spotify_clone/features/auth/views/screens/login_screen.dart';
 import 'package:flutter_spotify_clone/features/auth/views/widgets/auth_button.dart';
 import 'package:flutter_spotify_clone/features/auth/views/widgets/custom_field.dart';
 
@@ -30,6 +31,32 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     final isLoading = ref.watch(authViewModelProvider).isLoading;
+
+    // listen to state
+    ref.listen(authViewModelProvider, (prev, next) {
+      next.when(
+        data: (data) {
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              const SnackBar(
+                content: Text("Account created successfully! Please login."),
+              ),
+            );
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => LoginScreen()),
+          );
+        },
+        error: (error, st) {
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(SnackBar(content: Text(error.toString())));
+        },
+        loading: () {},
+      );
+    });
+
     return Scaffold(
       appBar: AppBar(),
       body: isLoading
@@ -78,19 +105,26 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                       buttonText: "Sign Up",
                     ),
                     const SizedBox(height: 20),
-                    RichText(
-                      text: TextSpan(
-                        text: "Already have account? ",
-                        style: Theme.of(context).textTheme.titleMedium,
-                        children: [
-                          TextSpan(
-                            text: "Sign in",
-                            style: TextStyle(
-                              color: Pallete.gradient2,
-                              fontWeight: FontWeight.bold,
+                    GestureDetector(
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => LoginScreen()),
+                      ),
+
+                      child: RichText(
+                        text: TextSpan(
+                          text: "Already have account? ",
+                          style: Theme.of(context).textTheme.titleMedium,
+                          children: [
+                            TextSpan(
+                              text: "Sign in",
+                              style: TextStyle(
+                                color: Pallete.gradient2,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ],

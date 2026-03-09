@@ -46,7 +46,7 @@ class AuthRemoteRespository {
         body: jsonEncode({"email": email, "password": password}),
       );
       final resBody = jsonDecode(response.body) as Map<String, dynamic>;
-      debugPrint(resBody.toString());
+
       if (response.statusCode != 200) {
         return Left(AppFailure(resBody["detail"]));
       }
