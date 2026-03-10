@@ -1,13 +1,14 @@
 import "dart:convert";
 
 import "package:flutter/material.dart" show debugPrint;
+import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:flutter_spotify_clone/core/constants/server_const.dart";
 import "package:flutter_spotify_clone/core/failure/failure.dart";
 import "package:flutter_spotify_clone/features/auth/models/user_model.dart";
 import "package:fpdart/fpdart.dart";
 import "package:http/http.dart" as http;
 
-class AuthRemoteRespository {
+class AuthRemoteRepository {
   // regisger user
   Future<Either<AppFailure, UserModel>> signUp({
     required String name,
@@ -50,9 +51,33 @@ class AuthRemoteRespository {
       if (response.statusCode != 200) {
         return Left(AppFailure(resBody["detail"]));
       }
-      return Right(UserModel.fromMap(resBody['user']));
+      return Right(
+        UserModel.fromMap(resBody['user']).copyWith(token: resBody["token"]),
+      );
+    } catch (e) {
+      return Left(AppFailure(e.toString()));
+    }
+  }
+
+  Future<Either<AppFailure, UserModel>> getCurrentUser(String token) async {
+    try {
+      final response = await http.get(
+        Uri.parse("${ServerConstant.baseUrl}auth"),
+        headers: {'Content-Type': 'application/json', 'x-auth-token': token},
+      );
+      final resBody = jsonDecode(response.body) as Map<String, dynamic>;
+      debugPrint(response.statusCode.toString());
+
+      if (response.statusCode != 200) {
+        return Left(AppFailure(resBody["detail"]));
+      }
+      return Right(UserModel.fromMap(resBody).copyWith(token: token));
     } catch (e) {
       return Left(AppFailure(e.toString()));
     }
   }
 }
+
+final authRemoteRepositoryProvider = Provider.autoDispose<AuthRemoteRepository>(
+  (ref) => AuthRemoteRepository(),
+);

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spotify_clone/core/themes/app_pallete.dart';
+import 'package:flutter_spotify_clone/core/utils.dart';
 import 'package:flutter_spotify_clone/core/widget/loader.dart';
 import 'package:flutter_spotify_clone/features/auth/repository/auth_remote_respository.dart';
 import 'package:flutter_spotify_clone/features/auth/viewmodel/auth_viewmodel.dart';
@@ -30,21 +31,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isLoading = ref.watch(authViewModelProvider).isLoading;
+    final isLoading = ref.watch(
+      authViewModelProvider.select((s) => s.isLoading),
+    );
 
     ref.listen(authViewModelProvider, (prev, next) {
       next.when(
-        data: (date) {
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(builder: (context) => LoginScreen()),
-          // );
-        },
-        error: (error, st) {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(SnackBar(content: Text(error.toString())));
-        },
+        data: (data) {},
+        error: (error, st) => showSnackBar(context, error.toString()),
         loading: () {},
       );
     });

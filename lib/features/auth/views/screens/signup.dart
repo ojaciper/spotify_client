@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spotify_clone/core/themes/app_pallete.dart';
+import 'package:flutter_spotify_clone/core/utils.dart';
 import 'package:flutter_spotify_clone/core/widget/loader.dart';
 import 'package:flutter_spotify_clone/features/auth/viewmodel/auth_viewmodel.dart';
 import 'package:flutter_spotify_clone/features/auth/views/screens/login_screen.dart';
@@ -30,29 +31,23 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isLoading = ref.watch(authViewModelProvider).isLoading;
+    final isLoading = ref.watch(
+      authViewModelProvider.select((s) => s.isLoading == true),
+    );
 
     // listen to state
     ref.listen(authViewModelProvider, (prev, next) {
       next.when(
-        data: (data) {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              const SnackBar(
-                content: Text("Account created successfully! Please login."),
-              ),
-            );
+        data: (user) {
+          showSnackBar(context, "Account created successfully! Please login.");
+
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => LoginScreen()),
           );
         },
-        error: (error, st) {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(SnackBar(content: Text(error.toString())));
-        },
+
+        error: (error, st) => showSnackBar(context, error.toString()),
         loading: () {},
       );
     });
