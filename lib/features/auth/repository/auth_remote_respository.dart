@@ -66,8 +66,6 @@ class AuthRemoteRepository {
         headers: {'Content-Type': 'application/json', 'x-auth-token': token},
       );
       final resBody = jsonDecode(response.body) as Map<String, dynamic>;
-      debugPrint(response.statusCode.toString());
-
       if (response.statusCode != 200) {
         return Left(AppFailure(resBody["detail"]));
       }

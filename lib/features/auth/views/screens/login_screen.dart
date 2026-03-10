@@ -8,6 +8,7 @@ import 'package:flutter_spotify_clone/features/auth/viewmodel/auth_viewmodel.dar
 import 'package:flutter_spotify_clone/features/auth/views/screens/signup.dart';
 import 'package:flutter_spotify_clone/features/auth/views/widgets/auth_button.dart';
 import 'package:flutter_spotify_clone/features/auth/views/widgets/custom_field.dart';
+import 'package:flutter_spotify_clone/features/home/views/screen/home_screen.dart';
 import 'package:fpdart/fpdart.dart' hide State;
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -37,7 +38,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     ref.listen(authViewModelProvider, (prev, next) {
       next.when(
-        data: (data) {},
+        data: (data) {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => HomeScreen()),
+            (_) => false,
+          );
+        },
         error: (error, st) => showSnackBar(context, error.toString()),
         loading: () {},
       );

@@ -43,7 +43,6 @@ class AuthViewmodel extends AsyncNotifier<UserModel?> {
       ),
       Right(value: final r) => state = AsyncValue.data(r),
     };
-    // debugPrint(val.toString());
   }
 
   Future<void> login({required String email, required String password}) async {
@@ -72,22 +71,23 @@ class AuthViewmodel extends AsyncNotifier<UserModel?> {
   Future<UserModel?> getUserData() async {
     state = const AsyncValue.loading();
     final token = _authLocalRepository.getToken();
-    debugPrint(token);
-
     if (token != null) {
       final res = await _authRemoteRepository.getCurrentUser(token);
-      debugPrint(res.toString());
-      // if (!ref.mounted) return null;
       final val = switch (res) {
         Left(value: final l) => state = AsyncValue.error(
           l.message,
           StackTrace.current,
         ),
-        Right(value: final r) => state = AsyncValue.data(r),
+        Right(value: final r) => _getDataSuccess(r),
       };
       return val.value;
     }
     return null;
+  }
+
+  AsyncValue<UserModel?> _getDataSuccess(UserModel user) {
+    _currentUserNotifier.addUser(user);
+    return state = AsyncValue.data(user);
   }
 }
 
