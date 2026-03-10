@@ -6,7 +6,7 @@ import 'package:flutter_spotify_clone/core/widget/loader.dart';
 import 'package:flutter_spotify_clone/features/auth/viewmodel/auth_viewmodel.dart';
 import 'package:flutter_spotify_clone/features/auth/views/screens/login_screen.dart';
 import 'package:flutter_spotify_clone/features/auth/views/widgets/auth_button.dart';
-import 'package:flutter_spotify_clone/features/auth/views/widgets/custom_field.dart';
+import 'package:flutter_spotify_clone/core/widget/custom_field.dart';
 
 class SignupScreen extends ConsumerStatefulWidget {
   const SignupScreen({super.key});

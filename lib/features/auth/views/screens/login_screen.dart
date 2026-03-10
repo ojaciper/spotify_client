@@ -7,7 +7,7 @@ import 'package:flutter_spotify_clone/features/auth/repository/auth_remote_respo
 import 'package:flutter_spotify_clone/features/auth/viewmodel/auth_viewmodel.dart';
 import 'package:flutter_spotify_clone/features/auth/views/screens/signup.dart';
 import 'package:flutter_spotify_clone/features/auth/views/widgets/auth_button.dart';
-import 'package:flutter_spotify_clone/features/auth/views/widgets/custom_field.dart';
+import 'package:flutter_spotify_clone/core/widget/custom_field.dart';
 import 'package:flutter_spotify_clone/features/home/views/screen/home_screen.dart';
 import 'package:fpdart/fpdart.dart' hide State;
 

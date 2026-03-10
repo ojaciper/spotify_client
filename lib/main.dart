@@ -5,6 +5,7 @@ import 'package:flutter_spotify_clone/core/themes/theme.dart';
 import 'package:flutter_spotify_clone/features/auth/viewmodel/auth_viewmodel.dart';
 import 'package:flutter_spotify_clone/features/auth/views/screens/signup.dart';
 import 'package:flutter_spotify_clone/features/home/views/screen/home_screen.dart';
+import 'package:flutter_spotify_clone/features/home/views/screen/upload_song_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,7 +24,7 @@ class MyApp extends ConsumerWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: AppTheme.darkThemeMode,
-      home: currentUser == null ? const SignupScreen() : HomeScreen(),
+      home: currentUser == null ? const SignupScreen() : UploadSongScreen(),
     );
   }
 }
