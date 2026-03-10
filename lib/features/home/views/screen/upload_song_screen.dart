@@ -1,8 +1,12 @@
+import 'dart:io';
+
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spotify_clone/core/themes/app_pallete.dart';
+import 'package:flutter_spotify_clone/core/utils.dart';
+
 import 'package:flutter_spotify_clone/core/widget/custom_field.dart';
 
 class UploadSongScreen extends ConsumerStatefulWidget {
@@ -16,12 +20,26 @@ class _UploadSongScreenState extends ConsumerState<UploadSongScreen> {
   final _songNameController = TextEditingController();
   final _artistController = TextEditingController();
   Color _selectedColor = Pallete.cardColor;
+  File? selectedImage;
+  File? selectedAudio;
+
   @override
   void dispose() {
     _songNameController.dispose();
     _artistController.dispose();
     super.dispose();
   }
+
+  void selectImage() async {
+    final pickedImage = await pickImage();
+    if (pickedImage != null) {
+      setState(() {
+        selectedImage = pickedImage;
+      });
+    }
+  }
+
+  void selectAudio() async {}
 
   @override
   Widget build(BuildContext context) {
@@ -36,29 +54,41 @@ class _UploadSongScreenState extends ConsumerState<UploadSongScreen> {
           padding: const EdgeInsets.all(20),
           child: Column(
             children: [
-              DottedBorder(
-                options: RoundedRectDottedBorderOptions(
-                  radius: Radius.circular(10),
-                  strokeCap: StrokeCap.round,
-                  color: Pallete.borderColor,
-                  strokeWidth: 2,
-                  dashPattern: [4, 10],
-                ),
-                child: SizedBox(
-                  height: 150,
-                  width: double.infinity,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.folder_open, size: 40),
-                      const SizedBox(height: 15),
-                      Text(
-                        "Select the thumbnail for your song",
-                        style: TextStyle(fontSize: 15),
+              GestureDetector(
+                onTap: selectImage,
+                child: selectedImage != null
+                    ? SizedBox(
+                        height: 150,
+                        width: double.infinity,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Image.file(selectedImage!, fit: BoxFit.cover),
+                        ),
+                      )
+                    : DottedBorder(
+                        options: RoundedRectDottedBorderOptions(
+                          radius: Radius.circular(10),
+                          strokeCap: StrokeCap.round,
+                          color: Pallete.borderColor,
+                          strokeWidth: 2,
+                          dashPattern: [4, 10],
+                        ),
+                        child: SizedBox(
+                          height: 150,
+                          width: double.infinity,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.folder_open, size: 40),
+                              const SizedBox(height: 15),
+                              Text(
+                                "Select the thumbnail for your song",
+                                style: TextStyle(fontSize: 15),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
-                    ],
-                  ),
-                ),
               ),
               const SizedBox(height: 40),
               CustomField(
