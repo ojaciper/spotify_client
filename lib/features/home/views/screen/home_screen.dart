@@ -13,7 +13,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final currentUser = ref.watch(currentUserNotifierProvider);
-    debugPrint(currentUser.toString());
+    debugPrint(currentUser!.token.toString());
 
     return const Scaffold(body: Center(child: Text("Home")));
   }

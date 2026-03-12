@@ -15,8 +15,6 @@ Future<File?> pickAudio() async {
       type: FileType.audio,
       allowMultiple: false,
     );
-    debugPrint('PICKER RESULT: $filePickerRes'); // 👈 is it null?
-    debugPrint('FILES: ${filePickerRes?.files}'); // 👈 any files?
 
     if (filePickerRes != null) {
       final path = filePickerRes.files.first.xFile.path;
@@ -24,9 +22,7 @@ Future<File?> pickAudio() async {
       return File(path);
     }
     return null;
-  } catch (e, st) {
-    debugPrint('PICKER ERROR: $e'); // 👈 exact error
-    debugPrint('STACKTRACE: $st');
+  } catch (e) {
     return null;
   }
 }
@@ -41,7 +37,14 @@ Future<File?> pickImage() async {
     }
     return null;
   } catch (e) {
-    print(e.toString());
     return null;
   }
+}
+
+String rgbToHex(Color color) {
+  return '${color.red.toRadixString(16).padLeft(2, "0")}${color.green.toRadixString(16).padLeft(2, "0")}${color.blue.toRadixString(16).padLeft(2, "0")}';
+}
+
+Color hexToColor(String hex) {
+  return Color(int.parse(hex, radix: 16) + 0xFF000000);
 }
