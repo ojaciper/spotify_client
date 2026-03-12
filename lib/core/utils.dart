@@ -13,12 +13,20 @@ Future<File?> pickAudio() async {
   try {
     final filePickerRes = await FilePicker.platform.pickFiles(
       type: FileType.audio,
+      allowMultiple: false,
     );
+    debugPrint('PICKER RESULT: $filePickerRes'); // 👈 is it null?
+    debugPrint('FILES: ${filePickerRes?.files}'); // 👈 any files?
+
     if (filePickerRes != null) {
-      return File(filePickerRes.files.first.xFile.path);
+      final path = filePickerRes.files.first.xFile.path;
+      debugPrint('PATH: $path');
+      return File(path);
     }
     return null;
-  } catch (e) {
+  } catch (e, st) {
+    debugPrint('PICKER ERROR: $e'); // 👈 exact error
+    debugPrint('STACKTRACE: $st');
     return null;
   }
 }

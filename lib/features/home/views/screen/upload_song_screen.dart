@@ -1,13 +1,12 @@
 import 'dart:io';
-
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flex_color_picker/flex_color_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spotify_clone/core/themes/app_pallete.dart';
 import 'package:flutter_spotify_clone/core/utils.dart';
-
 import 'package:flutter_spotify_clone/core/widget/custom_field.dart';
+import 'package:flutter_spotify_clone/features/home/views/widgets/audio_wave.dart';
 
 class UploadSongScreen extends ConsumerStatefulWidget {
   const UploadSongScreen({super.key});
@@ -32,6 +31,7 @@ class _UploadSongScreenState extends ConsumerState<UploadSongScreen> {
 
   void selectImage() async {
     final pickedImage = await pickImage();
+    print("========selected PickedImage:$pickedImage======");
     if (pickedImage != null) {
       setState(() {
         selectedImage = pickedImage;
@@ -39,10 +39,20 @@ class _UploadSongScreenState extends ConsumerState<UploadSongScreen> {
     }
   }
 
-  void selectAudio() async {}
+  void selectAudio() async {
+    final pickedAudio = await pickAudio();
+    debugPrint('PICKED AUDIO: $pickedAudio');
+    if (pickedAudio != null) {
+      setState(() {
+        selectedAudio = pickedAudio;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    // print("========selected Image:$selectedImage======");
+    print("========selected Audio:$selectedAudio======");
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -91,12 +101,14 @@ class _UploadSongScreenState extends ConsumerState<UploadSongScreen> {
                       ),
               ),
               const SizedBox(height: 40),
-              CustomField(
-                controller: null,
-                hintText: "Pick Song",
-                readOnly: true,
-                onTap: () {},
-              ),
+              selectedAudio != null
+                  ? AudioWave(path: selectedAudio!.path)
+                  : CustomField(
+                      controller: null,
+                      hintText: "Pick Song",
+                      readOnly: true,
+                      onTap: selectAudio,
+                    ),
               const SizedBox(height: 20),
               CustomField(controller: _artistController, hintText: "Artist"),
               const SizedBox(height: 20),
