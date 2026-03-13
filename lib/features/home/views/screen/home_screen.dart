@@ -4,6 +4,7 @@ import 'package:flutter_spotify_clone/core/provider/current_user_notifier.dart';
 import 'package:flutter_spotify_clone/core/themes/app_pallete.dart';
 import 'package:flutter_spotify_clone/features/home/views/screen/library_screen.dart';
 import 'package:flutter_spotify_clone/features/home/views/screen/song_screen.dart';
+import 'package:flutter_spotify_clone/features/home/views/widgets/music_slab.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -27,7 +28,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final currentUser = ref.watch(currentUserNotifierProvider);
     // debugPrint(currentUser!.token.toString());
     return Scaffold(
-      body: _pages[_selectedIndex],
+      body: Stack(
+        children: [
+          _pages[_selectedIndex],
+          const Positioned(bottom: 0, child: MusicSlab()),
+        ],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: (val) => onPageChange(val),
