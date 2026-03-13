@@ -24,7 +24,7 @@ class MyApp extends ConsumerWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: AppTheme.darkThemeMode,
-      home: currentUser == null ? const SignupScreen() : UploadSongScreen(),
+      home: currentUser == null ? const SignupScreen() : HomeScreen(),
     );
   }
 }

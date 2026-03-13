@@ -1,12 +1,26 @@
-import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spotify_clone/core/provider/current_user_notifier.dart';
 import 'package:flutter_spotify_clone/core/utils.dart';
+import 'package:flutter_spotify_clone/features/home/models/song_model.dart';
 import 'package:flutter_spotify_clone/features/home/repository/home_remote_repository.dart';
 import 'package:fpdart/fpdart.dart';
+
+final getAllSongsProvider = FutureProvider.autoDispose<List<SongModel>>((
+  ref,
+) async {
+  final token = ref.watch(currentUserNotifierProvider)!.token;
+  final res = await ref
+      .watch(homeRemoteRepositoryProvider)
+      .getAllSong(token: token);
+
+  final val = switch (res) {
+    Left(value: final l) => throw l.message,
+    Right(value: final r) => r,
+  };
+  return val;
+});
 
 class HomeViewmodel extends AsyncNotifier<void> {
   late HomeRemoteRepository _homeRemoteRepository;
