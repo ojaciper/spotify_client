@@ -25,7 +25,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final currentUser = ref.watch(currentUserNotifierProvider);
-    debugPrint(currentUser!.token.toString());
+    // debugPrint(currentUser!.token.toString());
     return Scaffold(
       body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(

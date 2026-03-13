@@ -4,6 +4,7 @@ import 'dart:convert';
 class SongModel {
   final String id;
   final String songName;
+  final String artist;
   final String thumbnailUrl;
   final String songUrl;
   final String hexCode;
@@ -11,7 +12,7 @@ class SongModel {
     required this.id,
     required this.songName,
     required this.thumbnailUrl,
-
+    required this.artist,
     required this.songUrl,
     required this.hexCode,
   });
@@ -19,6 +20,7 @@ class SongModel {
   SongModel copyWith({
     String? id,
     String? songName,
+    String? artist,
     String? thumbnailUrl,
     String? thumbnailUurl,
     String? songUrl,
@@ -27,6 +29,7 @@ class SongModel {
     return SongModel(
       id: id ?? this.id,
       songName: songName ?? this.songName,
+      artist: artist ?? this.artist,
       thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
       songUrl: songUrl ?? this.songUrl,
       hexCode: hexCode ?? this.hexCode,
@@ -37,6 +40,7 @@ class SongModel {
     return <String, dynamic>{
       'id': id,
       'song_name': songName,
+      'artist': artist,
       'thumbnail_url': thumbnailUrl,
       'song_url': songUrl,
       'hex_code': hexCode,
@@ -47,8 +51,9 @@ class SongModel {
     return SongModel(
       id: map['id'] ?? '',
       songName: map['song_name'] ?? '',
+      artist: map['artist'] ?? '',
       thumbnailUrl: map['thumbnail_url'] ?? '',
-      hexCode: map['hex_code'],
+      hexCode: map['hex_code'] ?? '',
       songUrl: map['song_url'] ?? '',
     );
   }
@@ -60,7 +65,7 @@ class SongModel {
 
   @override
   String toString() {
-    return 'SongModel(id: $id, songName: $songName, thumbnailUrl: $thumbnailUrl, songUrl: $songUrl, hexCode: $hexCode)';
+    return 'SongModel(id: $id, songName: $songName, artist: $artist thumbnailUrl: $thumbnailUrl, songUrl: $songUrl, hexCode: $hexCode)';
   }
 
   @override
@@ -69,6 +74,7 @@ class SongModel {
 
     return other.id == id &&
         other.songName == songName &&
+        other.artist == artist &&
         other.thumbnailUrl == thumbnailUrl &&
         other.songUrl == songUrl &&
         other.hexCode == hexCode;
@@ -78,6 +84,7 @@ class SongModel {
   int get hashCode {
     return id.hashCode ^
         songName.hashCode ^
+        artist.hashCode ^
         thumbnailUrl.hashCode ^
         songUrl.hashCode ^
         hexCode.hashCode;

@@ -32,9 +32,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     final isLoading = ref.watch(
-      authViewModelProvider.select((s) => s.isLoading == true),
+      authViewModelProvider.select((s) => s.isLoading),
     );
-
+    debugPrint(isLoading.toString());
     // listen to state
     ref.listen(authViewModelProvider, (prev, next) {
       next.when(

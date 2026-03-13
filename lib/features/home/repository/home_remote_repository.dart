@@ -53,6 +53,7 @@ class HomeRemoteRepository {
         headers: {"Content-Type": "application/json", "x-auth-token": token},
       );
       debugPrint(res.statusCode.toString());
+
       var resBodyMap = jsonDecode(res.body);
       if (res.statusCode != 200) {
         resBodyMap = resBodyMap as Map<String, dynamic>;
