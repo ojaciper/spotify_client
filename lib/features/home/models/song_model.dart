@@ -8,6 +8,7 @@ class SongModel {
   final String thumbnailUrl;
   final String songUrl;
   final String hexCode;
+  final bool isPlaying;
   SongModel({
     required this.id,
     required this.songName,
@@ -15,6 +16,7 @@ class SongModel {
     required this.artist,
     required this.songUrl,
     required this.hexCode,
+    this.isPlaying = false,
   });
 
   SongModel copyWith({
@@ -25,6 +27,7 @@ class SongModel {
     String? thumbnailUurl,
     String? songUrl,
     String? hexCode,
+    bool? isPlaying,
   }) {
     return SongModel(
       id: id ?? this.id,
@@ -33,6 +36,7 @@ class SongModel {
       thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
       songUrl: songUrl ?? this.songUrl,
       hexCode: hexCode ?? this.hexCode,
+      isPlaying: isPlaying ?? this.isPlaying,
     );
   }
 
