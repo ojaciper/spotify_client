@@ -16,6 +16,16 @@ class CurrentSongNotifier extends Notifier<SongModel?> {
     audioPlayer = AudioPlayer();
     final audioSource = AudioSource.uri(Uri.parse(song.songUrl));
     await audioPlayer!.setAudioSource(audioSource);
+    audioPlayer!.playerStateStream.listen((state) {
+      if (state.processingState == ProcessingState.completed) {
+        audioPlayer!.seek(Duration.zero);
+        audioPlayer!.pause();
+        isPlaying = false;
+        final currentSong = this.state;
+        this.state = null;
+        this.state = currentSong;
+      }
+    });
     audioPlayer!.play();
     isPlaying = true;
     state = song;
@@ -32,6 +42,14 @@ class CurrentSongNotifier extends Notifier<SongModel?> {
     final currentSong = state;
     state = null;
     state = currentSong;
+  }
+
+  void seek(double value) {
+    audioPlayer!.seek(
+      Duration(
+        milliseconds: (value * audioPlayer!.duration!.inMilliseconds).toInt(),
+      ),
+    );
   }
 }
 
