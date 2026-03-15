@@ -1,18 +1,22 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spotify_clone/features/home/models/song_model.dart';
+import 'package:flutter_spotify_clone/features/home/repository/home_local_repository.dart';
 import 'package:just_audio/just_audio.dart';
 
 class CurrentSongNotifier extends Notifier<SongModel?> {
+  late HomeLocalRepository _homeLocalRepository;
   AudioPlayer? audioPlayer;
   bool isPlaying = false;
+
   @override
   SongModel? build() {
+    _homeLocalRepository = ref.watch(homeLocalRepositoryProvider);
     return null;
   }
 
   void updateSong(SongModel song) async {
     await audioPlayer?.dispose();
+    await audioPlayer?.stop();
     audioPlayer = AudioPlayer();
     final audioSource = AudioSource.uri(Uri.parse(song.songUrl));
     await audioPlayer!.setAudioSource(audioSource);
@@ -26,6 +30,7 @@ class CurrentSongNotifier extends Notifier<SongModel?> {
         this.state = currentSong;
       }
     });
+    _homeLocalRepository.uploadLocalSong(song);
     audioPlayer!.play();
     isPlaying = true;
     state = song;

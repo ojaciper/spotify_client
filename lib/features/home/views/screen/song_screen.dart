@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spotify_clone/core/provider/current_song_notifier.dart';
 import 'package:flutter_spotify_clone/core/themes/app_pallete.dart';
+import 'package:flutter_spotify_clone/core/utils.dart';
 import 'package:flutter_spotify_clone/core/widget/loader.dart';
 import 'package:flutter_spotify_clone/features/home/viewmodel/home_viewmodel.dart';
 
@@ -9,10 +10,93 @@ class SongScreen extends ConsumerWidget {
   const SongScreen({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return SafeArea(
+    final recentlyPlaySong = ref
+        .watch(homeViewmodelProvider.notifier)
+        .getRecentlyPlaySong();
+    final currentSong = ref.watch(currentSongNotifierProvider);
+    return AnimatedContainer( 
+      duration: const Duration(milliseconds : 500),
+      decoration: currentSong == null
+          ? null
+          : BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  hexToColor(currentSong.hexCode),
+                  Pallete.transparentColor,
+                ],
+                stops: [0.0, 0.3],
+              ),
+            ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Padding(
+            padding: const EdgeInsets.only(
+              top: 14,
+              left: 16,
+              right: 16,
+              bottom: 36,
+            ),
+            child: SizedBox(
+              height: 289,
+              child: GridView.builder(
+                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: 200,
+                  childAspectRatio: 3,
+                  crossAxisSpacing: 8,
+                  mainAxisSpacing: 8,
+                ),
+                itemCount: recentlyPlaySong.length,
+                itemBuilder: (context, index) {
+                  final song = recentlyPlaySong[index];
+                  return GestureDetector(
+                    onTap: () {
+                      ref
+                          .read(currentSongNotifierProvider.notifier)
+                          .updateSong(song);
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Pallete.borderColor,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 56,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: NetworkImage(song.thumbnailUrl),
+                                fit: BoxFit.cover,
+                              ),
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(5),
+                                bottomLeft: Radius.circular(4),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                          Flexible(
+                            child: Text(
+                              song.songName,
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w700,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              maxLines: 1,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(

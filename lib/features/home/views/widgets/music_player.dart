@@ -118,30 +118,35 @@ class MusicPlayer extends ConsumerWidget {
                       }
                       return Column(
                         children: [
-                          SliderTheme(
-                            data: SliderTheme.of(context).copyWith(
-                              activeTrackColor: Pallete.whiteColor,
-                              inactiveTrackColor: Pallete.whiteColor
-                                  .withOpacity(0.117),
-                              thumbColor: Pallete.whiteColor,
-                              trackHeight: 4,
-                              overlayShape: SliderComponentShape.noOverlay,
-                            ),
-                            child: Slider(
-                              value: sliderValue,
-                              min: 0,
-                              max: 1,
-                              onChanged: (val) {
-                                sliderValue = val;
-                              },
-                              onChangeEnd: songNotifier.seek,
-                            ),
+                          StatefulBuilder(
+                            builder: (context, setState) {
+                              return SliderTheme(
+                                data: SliderTheme.of(context).copyWith(
+                                  activeTrackColor: Pallete.whiteColor,
+                                  inactiveTrackColor: Pallete.whiteColor
+                                      .withOpacity(0.117),
+                                  thumbColor: Pallete.whiteColor,
+                                  trackHeight: 4,
+                                  overlayShape: SliderComponentShape.noOverlay,
+                                ),
+                                child: Slider(
+                                  value: sliderValue,
+                                  min: 0,
+                                  max: 1,
+                                  onChanged: (val) {
+                                    sliderValue = val;
+                                    setState(() {});
+                                  },
+                                  onChangeEnd: songNotifier.seek,
+                                ),
+                              );
+                            },
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                "0:05",
+                                "${position?.inMinutes}:${(position?.inSeconds ?? 0) < 10 ? '0${position?.inSeconds}' : position?.inSeconds}",
                                 style: TextStyle(
                                   color: Pallete.subtitleText,
                                   fontSize: 13,
@@ -149,7 +154,7 @@ class MusicPlayer extends ConsumerWidget {
                                 ),
                               ),
                               Text(
-                                "0:10",
+                                "${duration?.inMinutes}:${(duration?.inSeconds ?? 0) < 10 ? '0${duration?.inSeconds}' : duration?.inSeconds}",
                                 style: TextStyle(
                                   color: Pallete.subtitleText,
                                   fontSize: 13,

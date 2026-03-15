@@ -37,9 +37,12 @@ dependencies:
     sdk: flutter
   flutter_riverpod: ^3.2.1
   fpdart: ^1.2.0
+  hive: ^4.0.0-dev.2
   http: ^1.6.0
   just_audio: ^0.10.5
   shared_preferences: ^2.5.4
+  isar_flutter_libs: ^4.0.0-dev.13
+  path_provider: ^2.1.0
 
 dev_dependencies:
   flutter_lints: ^6.0.0
