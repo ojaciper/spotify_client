@@ -69,6 +69,44 @@ class HomeRemoteRepository {
       return Left(AppFailure(e.toString()));
     }
   }
+
+  Future<Either<AppFailure, bool>> favSong({
+    required String token,
+    required String songId,
+  }) async {
+    try {
+      final res = await http.post(
+        Uri.parse('${ServerConstant.baseUrl}song/favorite'),
+        headers: {"Content-Type": "application/json", "x-auth-token": token},
+        body: jsonEncode({"song_id": songId}),
+      );
+      debugPrint(res.statusCode.toString());
+
+      var resBody = jsonDecode(res.body);
+      if (res.statusCode != 201) {
+        return Left(AppFailure(resBody['detail']));
+      }
+      return Right(resBody['message']);
+    } catch (e) {
+      return Left(AppFailure(e.toString()));
+    }
+  }
+
+  // Future<Either<AppFailure, SongModel>> getFavSong({
+  //   required String token,
+  // }) async {
+  //   try {
+  //     final res = await http.get(
+  //       Uri.parse('${ServerConstant.baseUrl}song/favorite'),
+  //       headers: {"Content-Type": "application/json", "x-auth-token": token},
+  //     );
+  //     debugPrint(res.statusCode.toString());
+  //     var resBody = jsonDecode(res.body);
+
+  //   } catch (e) {
+  //     return Left(AppFailure(e.toString()));
+  //   }
+  // }
 }
 
 final homeRemoteRepositoryProvider = Provider<HomeRemoteRepository>(

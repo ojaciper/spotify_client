@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:ui';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spotify_clone/core/provider/current_user_notifier.dart';
 import 'package:flutter_spotify_clone/core/utils.dart';
@@ -60,6 +61,22 @@ class HomeViewmodel extends AsyncNotifier<void> {
 
   List<SongModel> getRecentlyPlaySong() {
     return _homeLocalRepository.loadSong();
+  }
+
+  void favSong({required String songId}) async {
+    state = const AsyncValue.loading();
+    final res = await _homeRemoteRepository.favSong(
+      token: ref.read(currentUserNotifierProvider)!.token,
+      songId: songId,
+    );
+    final val = switch (res) {
+      Left(value: final l) => state = AsyncValue.error(
+        l.message,
+        StackTrace.current,
+      ),
+      Right(value: final r) => state = AsyncValue.data(r),
+    };
+    debugPrint(val.toString());
   }
 }
 

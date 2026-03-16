@@ -4,6 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spotify_clone/core/provider/current_song_notifier.dart';
 import 'package:flutter_spotify_clone/core/themes/app_pallete.dart';
 import 'package:flutter_spotify_clone/core/utils.dart';
+import 'package:flutter_spotify_clone/features/home/repository/home_local_repository.dart';
+import 'package:flutter_spotify_clone/features/home/repository/home_remote_repository.dart';
+import 'package:flutter_spotify_clone/features/home/viewmodel/home_viewmodel.dart';
 import 'package:flutter_spotify_clone/features/home/views/widgets/music_player.dart';
 
 class MusicSlab extends ConsumerWidget {
@@ -96,7 +99,11 @@ class MusicSlab extends ConsumerWidget {
                 Row(
                   children: [
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        ref
+                            .read(homeViewmodelProvider.notifier)
+                            .favSong(songId: currentSong.id);
+                      },
                       icon: Icon(
                         CupertinoIcons.heart,
                         color: Pallete.whiteColor,
