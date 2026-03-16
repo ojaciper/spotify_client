@@ -96,7 +96,7 @@ class MusicPlayer extends ConsumerWidget {
                       ),
                       IconButton(
                         onPressed: () async {
-                          ref
+                          await ref
                               .read(homeViewmodelProvider.notifier)
                               .favSong(songId: songModel.id);
                         },

@@ -22,6 +22,19 @@ final getAllSongsProvider = FutureProvider<List<SongModel>>((ref) async {
   return val;
 });
 
+final getFavSongProvider = FutureProvider<List<SongModel>>((ref) async {
+  final token = ref.watch(currentUserNotifierProvider)!.token;
+  final res = await ref
+      .watch(homeRemoteRepositoryProvider)
+      .getFavSong(token: token);
+
+  final val = switch (res) {
+    Left(value: final l) => throw l.message,
+    Right(value: final r) => r,
+  };
+  return val;
+});
+
 class HomeViewmodel extends AsyncNotifier<void> {
   late HomeRemoteRepository _homeRemoteRepository;
   late HomeLocalRepository _homeLocalRepository;
@@ -63,7 +76,7 @@ class HomeViewmodel extends AsyncNotifier<void> {
     return _homeLocalRepository.loadSong();
   }
 
-  void favSong({required String songId}) async {
+  Future favSong({required String songId}) async {
     state = const AsyncValue.loading();
     final res = await _homeRemoteRepository.favSong(
       token: ref.read(currentUserNotifierProvider)!.token,

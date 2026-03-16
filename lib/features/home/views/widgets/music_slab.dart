@@ -100,7 +100,7 @@ class MusicSlab extends ConsumerWidget {
                   children: [
                     IconButton(
                       onPressed: () async {
-                        ref
+                        await ref
                             .read(homeViewmodelProvider.notifier)
                             .favSong(songId: currentSong.id);
                       },

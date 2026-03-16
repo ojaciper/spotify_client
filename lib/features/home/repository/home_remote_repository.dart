@@ -92,21 +92,32 @@ class HomeRemoteRepository {
     }
   }
 
-  // Future<Either<AppFailure, SongModel>> getFavSong({
-  //   required String token,
-  // }) async {
-  //   try {
-  //     final res = await http.get(
-  //       Uri.parse('${ServerConstant.baseUrl}song/favorite'),
-  //       headers: {"Content-Type": "application/json", "x-auth-token": token},
-  //     );
-  //     debugPrint(res.statusCode.toString());
-  //     var resBody = jsonDecode(res.body);
+  Future<Either<AppFailure, List<SongModel>>> getFavSong({
+    required String token,
+  }) async {
+    try {
+      final res = await http.get(
+        Uri.parse('${ServerConstant.baseUrl}song/favorites'),
+        headers: {"Content-Type": "application/json", "x-auth-token": token},
+      );
+      debugPrint(res.statusCode.toString());
+      var resBody = jsonDecode(res.body);
 
-  //   } catch (e) {
-  //     return Left(AppFailure(e.toString()));
-  //   }
-  // }
+      if (res.statusCode != 200) {
+        resBody = resBody as Map<String, dynamic>;
+        return Left(AppFailure(resBody["detail"]));
+      }
+      resBody = resBody as List;
+      List<SongModel> songs = [];
+
+      for (final map in resBody) {
+        songs.add(SongModel.fromMap(map['song']));
+      }
+      return Right(songs);
+    } catch (e) {
+      return Left(AppFailure(e.toString()));
+    }
+  }
 }
 
 final homeRemoteRepositoryProvider = Provider<HomeRemoteRepository>(
