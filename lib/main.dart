@@ -6,11 +6,17 @@ import 'package:flutter_spotify_clone/features/auth/viewmodel/auth_viewmodel.dar
 import 'package:flutter_spotify_clone/features/auth/views/screens/signup.dart';
 import 'package:flutter_spotify_clone/features/home/views/screen/home_screen.dart';
 import 'package:hive/hive.dart';
+import 'package:just_audio_background/just_audio_background.dart';
 
 import 'package:path_provider/path_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await JustAudioBackground.init(
+    androidNotificationChannelId: 'com.ryanheise.bg_demo.channel.audio',
+    androidNotificationChannelName: 'Audio playback',
+    androidNotificationOngoing: true,
+  );
   final dir = await getApplicationDocumentsDirectory();
   Hive.defaultDirectory = dir.path;
   final container = ProviderContainer();
