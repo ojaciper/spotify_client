@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_spotify_clone/core/provider/current_song_notifier.dart';
 import 'package:flutter_spotify_clone/core/themes/app_pallete.dart';
 import 'package:flutter_spotify_clone/core/widget/loader.dart';
 import 'package:flutter_spotify_clone/features/home/viewmodel/home_viewmodel.dart';
+import 'package:flutter_spotify_clone/features/home/views/screen/upload_song_screen.dart';
 
 class LibraryScreen extends ConsumerWidget {
   const LibraryScreen({super.key});
@@ -18,7 +20,13 @@ class LibraryScreen extends ConsumerWidget {
               itemCount: data.length + 1,
               itemBuilder: (context, index) {
                 if (index == data.length) {
-                  return const ListTile(
+                  return ListTile(
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => UploadSongScreen(),
+                      ),
+                    ),
                     leading: CircleAvatar(
                       radius: 35,
                       backgroundColor: Pallete.backgroundColor,
@@ -35,6 +43,11 @@ class LibraryScreen extends ConsumerWidget {
                 }
                 final song = data[index];
                 return ListTile(
+                  onTap: () {
+                    ref
+                        .read(currentSongNotifierProvider.notifier)
+                        .updateSong(song);
+                  },
                   leading: CircleAvatar(
                     backgroundImage: NetworkImage(song.thumbnailUrl),
                     radius: 35,

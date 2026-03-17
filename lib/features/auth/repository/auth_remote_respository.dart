@@ -4,7 +4,7 @@ import "package:flutter/material.dart" show debugPrint;
 import "package:flutter_riverpod/flutter_riverpod.dart";
 import "package:flutter_spotify_clone/core/constants/server_const.dart";
 import "package:flutter_spotify_clone/core/failure/failure.dart";
-import "package:flutter_spotify_clone/features/auth/models/user_model.dart";
+import "package:flutter_spotify_clone/core/model/user_model.dart";
 import "package:fpdart/fpdart.dart";
 import "package:http/http.dart" as http;
 

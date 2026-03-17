@@ -4,13 +4,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spotify_clone/core/provider/current_user_notifier.dart';
 import 'package:flutter_spotify_clone/core/utils.dart';
+import 'package:flutter_spotify_clone/features/home/models/fav_song_model.dart';
 import 'package:flutter_spotify_clone/features/home/models/song_model.dart';
 import 'package:flutter_spotify_clone/features/home/repository/home_local_repository.dart';
 import 'package:flutter_spotify_clone/features/home/repository/home_remote_repository.dart';
 import 'package:fpdart/fpdart.dart';
 
 final getAllSongsProvider = FutureProvider<List<SongModel>>((ref) async {
-  final token = ref.watch(currentUserNotifierProvider)!.token;
+  final token = ref.watch(
+    currentUserNotifierProvider.select((user) => user!.token),
+  );
   final res = await ref
       .watch(homeRemoteRepositoryProvider)
       .getAllSong(token: token);
@@ -23,7 +26,9 @@ final getAllSongsProvider = FutureProvider<List<SongModel>>((ref) async {
 });
 
 final getFavSongProvider = FutureProvider<List<SongModel>>((ref) async {
-  final token = ref.watch(currentUserNotifierProvider)!.token;
+  final token = ref.watch(
+    currentUserNotifierProvider.select((user) => user!.token),
+  );
   final res = await ref
       .watch(homeRemoteRepositoryProvider)
       .getFavSong(token: token);
@@ -87,9 +92,39 @@ class HomeViewmodel extends AsyncNotifier<void> {
         l.message,
         StackTrace.current,
       ),
-      Right(value: final r) => state = AsyncValue.data(r),
+      Right(value: final r) => _favSongSuccess(r, songId),
     };
     debugPrint(val.toString());
+  }
+
+  AsyncValue _favSongSuccess(bool isFavorited, String songId) {
+    final userNotifier = ref.read(currentUserNotifierProvider.notifier);
+    if (isFavorited) {
+      userNotifier.addUser(
+        ref
+            .read(currentUserNotifierProvider)!
+            .copyWith(
+              favorites: [
+                ...ref.read(currentUserNotifierProvider)!.favorites,
+                FavSongModel(id: '', song_id: songId, user_id: ''),
+              ],
+            ),
+      );
+    } else {
+      userNotifier.addUser(
+        ref
+            .read(currentUserNotifierProvider)!
+            .copyWith(
+              favorites: ref
+                  .read(currentUserNotifierProvider)!
+                  .favorites
+                  .where((fav) => fav.song_id != songId)
+                  .toList(),
+            ),
+      );
+    }
+    ref.invalidate(getFavSongProvider);
+    return state = AsyncValue.data(isFavorited);
   }
 }
 
